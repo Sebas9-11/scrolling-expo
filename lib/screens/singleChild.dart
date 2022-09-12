@@ -67,6 +67,13 @@ class MyStatelessWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     child: const Text('Fixed Height Content'),
                   ),
+                  Container(
+                    // Another fixed-height child.
+                    color: const Color(0xff008000), // Green
+                    height: 120.0,
+                    alignment: Alignment.center,
+                    child: const Text('Fixed Height Content'),
+                  ),
                 ],
               ),
             ),

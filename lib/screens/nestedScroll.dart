@@ -19,32 +19,66 @@ class MyStatelessWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('NestedScrollView'),
-        ),
+    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4'];
+    return DefaultTabController(
+      length: tabs.length, // This is the number of tabs.
+      child: Scaffold(
         body: NestedScrollView(
-            floatHeaderSlivers: true,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  title: const Text('List',
-                      style: TextStyle(color: Colors.white, fontSize: 40)),
-                  floating: true,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  title: const Text('Books'),
+                  pinned: true,
                   expandedHeight: 150.0,
                   forceElevated: innerBoxIsScrolled,
+                  bottom: TabBar(
+                    tabs: tabs.map((String name) => Tab(text: name)).toList(),
+                  ),
                 ),
-              ];
-            },
-            body: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: 30,
-                itemBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 50,
-                    child: Center(child: Text('Item $index')),
-                  );
-                })));
+              ),
+            ];
+          },
+          body: TabBarView(
+            children: tabs.map((String name) {
+              return SafeArea(
+                top: false,
+                bottom: false,
+                child: Builder(
+                  builder: (BuildContext context) {
+                    return CustomScrollView(
+                      key: PageStorageKey<String>(name),
+                      slivers: <Widget>[
+                        SliverOverlapInjector(
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                  context),
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.all(8.0),
+                          sliver: SliverFixedExtentList(
+                            itemExtent: 48.0,
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return ListTile(
+                                  title: Text('Item $index'),
+                                );
+                              },
+                              childCount: 30,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
   }
 }
