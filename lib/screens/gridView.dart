@@ -63,24 +63,6 @@ class ListTileSelectExampleState extends State<ListTileSelectExample> {
                 )
               : const SizedBox(),
           actions: <Widget>[
-            if (_isGridMode)
-              IconButton(
-                icon: const Icon(Icons.grid_on),
-                onPressed: () {
-                  setState(() {
-                    _isGridMode = false;
-                  });
-                },
-              )
-            else
-              IconButton(
-                icon: const Icon(Icons.list),
-                onPressed: () {
-                  setState(() {
-                    _isGridMode = true;
-                  });
-                },
-              ),
             if (isSelectionMode)
               TextButton(
                   child: !_selectAll
@@ -101,25 +83,15 @@ class ListTileSelectExampleState extends State<ListTileSelectExample> {
                   }),
           ],
         ),
-        body: _isGridMode
-            ? GridBuilder(
-                isSelectionMode: isSelectionMode,
-                selectedList: _selected,
-                onSelectionChange: (bool x) {
-                  setState(() {
-                    isSelectionMode = x;
-                  });
-                },
-              )
-            : ListBuilder(
-                isSelectionMode: isSelectionMode,
-                selectedList: _selected,
-                onSelectionChange: (bool x) {
-                  setState(() {
-                    isSelectionMode = x;
-                  });
-                },
-              ));
+        body: GridBuilder(
+          isSelectionMode: isSelectionMode,
+          selectedList: _selected,
+          onSelectionChange: (bool x) {
+            setState(() {
+              isSelectionMode = x;
+            });
+          },
+        ));
   }
 }
 
@@ -152,8 +124,8 @@ class GridBuilderState extends State<GridBuilder> {
   Widget build(BuildContext context) {
     return GridView.builder(
         itemCount: widget.selectedList.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
         itemBuilder: (_, int index) {
           return InkWell(
             onTap: () => _toggle(index),
@@ -174,57 +146,6 @@ class GridBuilderState extends State<GridBuilder> {
                   : const Icon(Icons.image),
             )),
           );
-        });
-  }
-}
-
-class ListBuilder extends StatefulWidget {
-  const ListBuilder({
-    super.key,
-    required this.selectedList,
-    required this.isSelectionMode,
-    required this.onSelectionChange,
-  });
-
-  final bool isSelectionMode;
-  final List<bool> selectedList;
-  final Function(bool)? onSelectionChange;
-
-  @override
-  State<ListBuilder> createState() => _ListBuilderState();
-}
-
-class _ListBuilderState extends State<ListBuilder> {
-  void _toggle(int index) {
-    if (widget.isSelectionMode) {
-      setState(() {
-        widget.selectedList[index] = !widget.selectedList[index];
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: widget.selectedList.length,
-        itemBuilder: (_, int index) {
-          return ListTile(
-              onTap: () => _toggle(index),
-              onLongPress: () {
-                if (!widget.isSelectionMode) {
-                  setState(() {
-                    widget.selectedList[index] = true;
-                  });
-                  widget.onSelectionChange!(true);
-                }
-              },
-              trailing: widget.isSelectionMode
-                  ? Checkbox(
-                      value: widget.selectedList[index],
-                      onChanged: (bool? x) => _toggle(index),
-                    )
-                  : const SizedBox.shrink(),
-              title: Text('item $index'));
         });
   }
 }
