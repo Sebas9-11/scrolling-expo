@@ -27,8 +27,6 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  final ScrollController _firstController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -39,9 +37,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               width: constraints.maxWidth,
               child: Scrollbar(
                 thumbVisibility: true,
-                controller: _firstController,
                 child: ListView.builder(
-                    controller: _firstController,
                     itemCount: 50,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(

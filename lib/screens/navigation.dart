@@ -4,7 +4,8 @@ import 'scrollBar.dart';
 import 'customScroll.dart';
 import 'singleChild.dart';
 import 'nestedScroll.dart';
-import 'gridView.dart';
+
+import 'gridview2.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({Key? key}) : super(key: key);
@@ -79,11 +80,10 @@ class _NavigationState extends State<Navigation> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const ScrollinGrid()),
+                    MaterialPageRoute(builder: (context) => const GridView2()),
                   );
                 },
-                child: const Text('GridView'),
+                child: const Text('GridView2'),
               ),
             ),
           ],
